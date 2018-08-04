@@ -6,4 +6,6 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.water.user.springboot.document.Users;
 
 public interface UserRepository extends MongoRepository<Users, Integer> {
+	
+	
 }

@@ -13,9 +13,14 @@ public class UserService {
 	private UserDao userDao;
 	
 	
-	public Users inserUser(Users users) {
+	public Users insertUser(Users users) {
 		
 		return userDao.inserUser(users);
+	}
+	
+	public Users authenticateUser(String phoneNumber, String password) {
+		
+		return userDao.validateUserByPhoneNumber(phoneNumber, password);
 	}
 	
 }
