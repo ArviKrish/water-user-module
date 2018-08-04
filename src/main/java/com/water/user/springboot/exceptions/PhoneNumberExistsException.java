@@ -1,4 +1,4 @@
-package com.water.user.exceptions;
+package com.water.user.springboot.exceptions;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;

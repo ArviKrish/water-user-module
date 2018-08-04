@@ -17,9 +17,9 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import com.mongodb.QueryBuilder;
 import com.mongodb.util.JSON;
-import com.water.user.exceptions.PhoneNumberExistsException;
 import com.water.user.springboot.constants.Constants;
 import com.water.user.springboot.document.Users;
+import com.water.user.springboot.exceptions.PhoneNumberExistsException;
 import com.water.user.springboot.util.MongoUtils;
 
 	/**
