@@ -1,6 +1,7 @@
 package com.water.user.springboot.document;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Convert;
@@ -46,11 +47,9 @@ public class Users {
     
     private String preferedPaymentType;
     
-    /*@DateTimeFormat(iso=ISO.DATE_TIME)
-    private LocalDateTime createDateTime;
+    private String createDateTime;
     
-    @DateTimeFormat(iso=ISO.DATE_TIME)
-    private LocalDateTime lastUpdatedDateTime;*/
+    private String lastUpdatedDateTime;
     
     private Boolean active;
     
@@ -169,21 +168,21 @@ public class Users {
 		this.preferedPaymentType = preferedPaymentType;
 	}
 
-	/*public LocalDateTime getCreateDateTime() {
+	public String getCreateDateTime() {
 		return createDateTime;
 	}
 
-	public void setCreateDateTime(LocalDateTime createDateTime) {
+	public void setCreateDateTime(String createDateTime) {
 		this.createDateTime = createDateTime;
 	}
 
-	public LocalDateTime getLastUpdatedDateTime() {
+	public String getLastUpdatedDateTime() {
 		return lastUpdatedDateTime;
 	}
 
-	public void setLastUpdatedDateTime(LocalDateTime lastUpdatedDateTime) {
+	public void setLastUpdatedDateTime(String lastUpdatedDateTime) {
 		this.lastUpdatedDateTime = lastUpdatedDateTime;
-	}*/
+	}
 
 	public Boolean getActive() {
 		return active;

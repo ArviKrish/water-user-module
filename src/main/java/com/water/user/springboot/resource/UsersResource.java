@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.water.user.springboot.config.Configurations;
 import com.water.user.springboot.document.Users;
 import com.water.user.springboot.exceptions.LoginException;
-import com.water.user.springboot.repository.UserDao;
 import com.water.user.springboot.repository.UserRepository;
 import com.water.user.springboot.service.UserService;
 

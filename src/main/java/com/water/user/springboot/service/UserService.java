@@ -1,30 +1,39 @@
 package com.water.user.springboot.service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.water.user.springboot.document.Users;
-import com.water.user.springboot.repository.UserDao;
+import com.water.user.springboot.repository.UserRepositoryImpl;
 
 @Service
 public class UserService {
 
+	
 	@Autowired
-	private UserDao userDao;
+	private UserRepositoryImpl userRepositoryImpl;
 	
 	
 	public Users insertUser(Users users) {
 		
-		/*users.setCreateDateTime(LocalDateTime.now());
-		users.setLastUpdatedDateTime(LocalDateTime.now());*/
-		return userDao.inserUser(users);
+		Date dNow = new Date( );
+	      SimpleDateFormat ft = 
+	      new SimpleDateFormat ("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
+
+	      
+		users.setCreateDateTime(ft.format(dNow));
+		users.setLastUpdatedDateTime(ft.format(dNow));
+		return userRepositoryImpl.inserUser(users);
 	}
 	
 	public Users authenticateUser(String phoneNumber, String password) {
 		
-		return userDao.validateUserByPhoneNumber(phoneNumber, password);
+		return userRepositoryImpl.validateUserByPhoneNumber(phoneNumber, password);
 	}
 	
 }
