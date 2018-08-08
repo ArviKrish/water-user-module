@@ -3,14 +3,19 @@ package com.water.user.springboot.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.water.user.springboot.Responses.Response;
 import com.water.user.springboot.config.Configurations;
 import com.water.user.springboot.document.Users;
 import com.water.user.springboot.exceptions.LoginException;
@@ -26,7 +31,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
-public class UsersResource {
+public class UsersResource<T> {
 
     private UserRepository userRepository;
     
@@ -50,12 +55,17 @@ public class UsersResource {
     }
     
     @GetMapping("/authenticateUser")
-    public Users authenticateUser(@RequestParam Map<String, String> queryMap) {
+    @ResponseBody
+    public ResponseEntity<Response> authenticateUser(@RequestParam Map<String, String> queryMap) {
     	
     	if(queryMap.get("phoneNumber").equalsIgnoreCase("")||queryMap.get("password").equalsIgnoreCase(""))
     		throw new LoginException("Phone number and Password cannot be empty");
         try {
-			return userService.authenticateUser(queryMap.get("phoneNumber"), queryMap.get("password"));
+			Users users = userService.authenticateUser(queryMap.get("phoneNumber"), queryMap.get("password"));
+			ResponseEntity<Object> responseEntity = new ResponseEntity<Object>(HttpStatus.ACCEPTED);
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+			return new ResponseEntity<Response>(new Response("001", "Authentication Success", users.getId()), responseHeaders,HttpStatus.OK);
 		} catch (LoginException e) {
 			throw new LoginException(e.getMessage());
 		}catch (Exception e) {
@@ -64,10 +74,14 @@ public class UsersResource {
     }
     
     @RequestMapping(value = "/createuser", method = RequestMethod.POST)
-    public Users createUser( @Valid  @RequestBody Users users) {
+    public ResponseEntity<Response> createUser( @Valid  @RequestBody Users users) {
     	
     	try {
-			return userService.insertUser(users);
+			userService.insertUser(users);
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+			return new ResponseEntity<Response>(new Response("001", "Registration successful", users.getId()), responseHeaders,HttpStatus.OK);
+			
 		} catch (PhoneNumberExistsException e) {
 			throw new PhoneNumberExistsException(e.getMessage());
 		}
