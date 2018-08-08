@@ -19,7 +19,7 @@ public class UserService {
 	private UserRepositoryImpl userRepositoryImpl;
 	
 	
-	public Users insertUser(Users users) {
+	public Users insertUser(Users users) throws Exception {
 		
 		Date dNow = new Date( );
 	      SimpleDateFormat ft = 
@@ -31,7 +31,7 @@ public class UserService {
 		return userRepositoryImpl.insertUser(users);
 	}
 	
-	public Users authenticateUser(String phoneNumber, String password) {
+	public Users authenticateUser(String phoneNumber, String password) throws Exception {
 		
 		return userRepositoryImpl.validateUserByPhoneNumber(phoneNumber, password);
 	}

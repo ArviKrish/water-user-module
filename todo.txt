@@ -7,3 +7,23 @@ logger
 validator
 
 index
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*DBCursor cursorDoc = collection.findOne(query);*/
+		/*while (cursorDoc.hasNext()) {
+			DBObject basicDBObject = cursorDoc.next();
+			Users foo = mongoTemplate.getConverter().read(Users.class, basicDBObject); 
+			System.out.println("GGGG : "+foo.getEmailId()); 
+		}*/

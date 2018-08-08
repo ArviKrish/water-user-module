@@ -16,7 +16,7 @@ import com.water.user.springboot.config.LocalDateTimeConverter;
 import com.water.user.springboot.validator.Phone;
 
 @Document
-public class Users {
+public class Users extends DTO {
 
 	@Id
     private String id;

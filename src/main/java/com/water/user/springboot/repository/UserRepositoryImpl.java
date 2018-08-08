@@ -17,7 +17,6 @@ import com.water.user.springboot.converters.CustomConverters;
 import com.water.user.springboot.document.Users;
 import com.water.user.springboot.exceptions.LoginException;
 import com.water.user.springboot.exceptions.PhoneNumberExistsException;
-import com.water.user.springboot.util.MongoUtils;
 
 public class UserRepositoryImpl extends RepositoryImpl  {
 	
@@ -26,80 +25,45 @@ public class UserRepositoryImpl extends RepositoryImpl  {
 		super(mongoDbFactory, mappingMongoConverter, customConverters, mongoOperations);
 	}
 
-	@Autowired
-	private MongoUtils mongoUtils;
-	
-	
     
-    public Users insertUser(Users users) {
-		
-
+    public Users insertUser(Users users) throws Exception {
 	    try {
 
 	    	if(isPhoneNumberRegistered(users.getPhoneNumber())) {
 	    		throw new PhoneNumberExistsException("");
 	    	}
-		DBCollection collection = mongoUtils.getDB().getCollection(Constants.COLLECTION_USERS);
-
 		DBObject document = new BasicDBObject();
-		//document = MongoUtils.getDbObject(users);
-
-		
-		/*BasicDBObject userswww =*/ mongoTemplate.getConverter().write(users, document);
-		mongoOperations.insert(document, Constants.COLLECTION_USERS);
-		
-		
-		/*collection.insert(document);*/
+		convertWrite(users, document);
+		insertObject(document);
 		
 		DBObject query = new QueryBuilder().start().put("phoneNumber").is(users.getPhoneNumber()).get();
 		
-		/*DBCursor cursorDoc = collection.findOne(query);*/
-		DBObject basicDBObject = collection.findOne(query);
-		return mongoTemplate.getConverter().read(Users.class, basicDBObject); 
-		
-		/*while (cursorDoc.hasNext()) {
-			DBObject basicDBObject = cursorDoc.next();
-			Users foo = mongoTemplate.getConverter().read(Users.class, basicDBObject); 
-			System.out.println("GGGG : "+foo.getEmailId()); 
-		}*/
+		DBObject basicDBObject = findOneObject(Constants.COLLECTION_USERS,query);
+		return (Users) convertRead(Users.class, basicDBObject);
 	    } catch (MongoException e) {
 		e.printStackTrace();
 	    }
 
 	    return null;
 	}
-	
-	private boolean isPhoneNumberRegistered(String phoneNumber) {
+
+	private boolean isPhoneNumberRegistered(String phoneNumber) throws Exception {
 		
-		DBCollection collection = mongoUtils.getDB().getCollection(Constants.COLLECTION_USERS);
 		DBObject query = new QueryBuilder().start().put("phoneNumber").is(phoneNumber).get();
-		DBObject basicDBObject = collection.findOne(query);
-		if(basicDBObject == null) {
-			return false;
-		}
-		return true;
+		return isAvailable(Constants.COLLECTION_USERS, query);
 	}
+
 	
-	
-    public Users validateUserByPhoneNumber(String phoneNumber, String password) {
-		
-		
-		
-		DBCollection collection = mongoUtils.getDB().getCollection(Constants.COLLECTION_USERS);
-		
-		 DBObject query = new QueryBuilder().start().and(new QueryBuilder().start().put("phoneNumber").is(phoneNumber).get(),
-				 new QueryBuilder().start().put("password").is(password).get()).get();
-		 
-		DBObject basicDBObject = collection.findOne(query);
-		if(basicDBObject != null) {
-		Users users = mongoTemplate.getConverter().read(Users.class, basicDBObject); 
-		
-		return users;
+    public Users validateUserByPhoneNumber(String phoneNumber, String password) throws Exception {
+
+		DBObject query = new QueryBuilder().start()
+				.and(new QueryBuilder().start().put("phoneNumber").is(phoneNumber).get(),
+						new QueryBuilder().start().put("password").is(password).get()).get();
+
+		DBObject basicDBObject = findOneObject(Constants.COLLECTION_USERS,query);
+		if (basicDBObject != null) {
+			return (Users) convertRead(Users.class, basicDBObject);
 		}
 		throw new LoginException("Login Failed - Incorrect Phone number or Password provided");
 	}
-    
-    
-    
-    
 }

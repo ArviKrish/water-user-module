@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.water.user.springboot.config.Configurations;
 import com.water.user.springboot.document.Users;
 import com.water.user.springboot.exceptions.LoginException;
+import com.water.user.springboot.exceptions.PhoneNumberExistsException;
 import com.water.user.springboot.repository.UserRepository;
 import com.water.user.springboot.service.UserService;
 
@@ -53,13 +54,24 @@ public class UsersResource {
     	
     	if(queryMap.get("phoneNumber").equalsIgnoreCase("")||queryMap.get("password").equalsIgnoreCase(""))
     		throw new LoginException("Phone number and Password cannot be empty");
-        return userService.authenticateUser(queryMap.get("phoneNumber"), queryMap.get("password"));
+        try {
+			return userService.authenticateUser(queryMap.get("phoneNumber"), queryMap.get("password"));
+		} catch (Exception e) {
+			throw new InternalError(e.getMessage());
+		}
     }
     
     @RequestMapping(value = "/createuser", method = RequestMethod.POST)
     public Users createUser( @Valid  @RequestBody Users users) {
     	
-    	return userService.insertUser(users);
+    	try {
+			return userService.insertUser(users);
+		} catch (PhoneNumberExistsException e) {
+			throw new PhoneNumberExistsException(e.getMessage());
+		}
+    	catch (Exception e) {
+    		throw new InternalError(e.getMessage());
+		}
 
     }
     

@@ -55,19 +55,8 @@ public class CustomConverters {
 	public class UsersWriterConverter implements Converter<Users, DBObject> {
 	    @Override
 	    public DBObject convert(Users users) {
-	    	System.out.println("XXXXXXXXXXXXXXXXXXXXXXXGGGGGGGG");
-	    	BasicDBObject dbObject = new BasicDBObject();
-	        
 	        BasicDBObject document = new BasicDBObject();
 			document = MongoUtils.getDbObject(users);
-			
-	        /*dbObject.put("age", user.getAge());*/
-	        /*if (user.getEmailAddress() != null) {
-	            DBObject emailDbObject = new BasicDBObject();
-	            emailDbObject.put("value", user.getEmailAddress().getValue());
-	            dbObject.put("email", emailDbObject);
-	        }*/
-	       /* dbObject.removeField("_class");*/
 	        return document;
 	    }
 	}
@@ -78,8 +67,6 @@ public class CustomConverters {
 	    public Users convert(DBObject dbObject) {
 	    	Users users = new Users();
 	    	users.setGSTNumber(dbObject.get("gstnumber").toString());
-	    	//users.setAddress((Address)dbObject.get("address")); 
-	        /*dbObject.put("age", user.getAge());*/
 	        if (dbObject.get("address") != null) {
 	        	Address address = new Address();
 	            DBObject emailDbObject = new BasicDBObject();
