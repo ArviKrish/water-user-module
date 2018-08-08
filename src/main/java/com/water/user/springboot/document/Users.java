@@ -61,7 +61,7 @@ public class Users {
 	public Users(String id, String phoneNumber, String alternatePhoneNumber, String contactPersonPrimary,
 			String contactPersonSecondary, String password, String organizationName, String emailId,
 			Address address, List<Address> deliveryAddresses, String gSTNumber, String preferedPaymentType,
-			/*LocalDateTime createDateTime, LocalDateTime lastUpdatedDateTime,*/ Boolean active) {
+			String createDateTime, String lastUpdatedDateTime, Boolean active) {
 		super();
 		this.id = id;
 		this.phoneNumber = phoneNumber;
@@ -75,8 +75,8 @@ public class Users {
 		this.setDeliveryAddresses(deliveryAddresses);
 		this.GSTNumber = gSTNumber;
 		this.preferedPaymentType = preferedPaymentType;
-	/*	this.createDateTime = createDateTime;
-		this.lastUpdatedDateTime = lastUpdatedDateTime;*/
+		this.createDateTime = createDateTime;
+		this.lastUpdatedDateTime = lastUpdatedDateTime;
 		this.active = active;
 	}
 
