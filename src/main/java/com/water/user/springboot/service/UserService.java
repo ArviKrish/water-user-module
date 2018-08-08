@@ -28,7 +28,7 @@ public class UserService {
 	      
 		users.setCreateDateTime(ft.format(dNow));
 		users.setLastUpdatedDateTime(ft.format(dNow));
-		return userRepositoryImpl.inserUser(users);
+		return userRepositoryImpl.insertUser(users);
 	}
 	
 	public Users authenticateUser(String phoneNumber, String password) {

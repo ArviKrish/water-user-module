@@ -3,6 +3,7 @@ package com.water.user.springboot.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 
 import com.mongodb.BasicDBObject;
@@ -21,14 +22,16 @@ import com.water.user.springboot.util.MongoUtils;
 public class UserRepositoryImpl extends RepositoryImpl  {
 	
 	public UserRepositoryImpl(MongoDbFactory mongoDbFactory, MappingMongoConverter mappingMongoConverter,
-			CustomConverters customConverters) {
-		super(mongoDbFactory, mappingMongoConverter, customConverters);
+			CustomConverters customConverters, MongoOperations mongoOperations) {
+		super(mongoDbFactory, mappingMongoConverter, customConverters, mongoOperations);
 	}
 
 	@Autowired
 	private MongoUtils mongoUtils;
+	
+	
     
-    public Users inserUser(Users users) {
+    public Users insertUser(Users users) {
 		
 
 	    try {
@@ -38,10 +41,15 @@ public class UserRepositoryImpl extends RepositoryImpl  {
 	    	}
 		DBCollection collection = mongoUtils.getDB().getCollection(Constants.COLLECTION_USERS);
 
-		BasicDBObject document = new BasicDBObject();
-		document = MongoUtils.getDbObject(users);
+		DBObject document = new BasicDBObject();
+		//document = MongoUtils.getDbObject(users);
 
-		collection.insert(document);
+		
+		/*BasicDBObject userswww =*/ mongoTemplate.getConverter().write(users, document);
+		mongoOperations.insert(document, Constants.COLLECTION_USERS);
+		
+		
+		/*collection.insert(document);*/
 		
 		DBObject query = new QueryBuilder().start().put("phoneNumber").is(users.getPhoneNumber()).get();
 		

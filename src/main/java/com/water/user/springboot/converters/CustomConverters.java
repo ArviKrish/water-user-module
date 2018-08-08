@@ -5,8 +5,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.water.user.springboot.document.Address;
+import com.water.user.springboot.document.Users;
+import com.water.user.springboot.util.MongoUtils;
 
 @Component
 public class CustomConverters {
@@ -14,26 +21,78 @@ public class CustomConverters {
 	private LongToDateConverter longToDateConverter;
 	private LocalDateWriteConverter localDateWriteConverter;
 	private LocalDateReadConverter localDateReadConverter;
+	private UsersReaderConverter usersReaderConverter;
+	private UsersWriterConverter usersWriterConverter;
 	
 	List<Converter> converters;
 	
+	@Autowired
+	private MongoUtils mongoUtils;
 	
 	public CustomConverters()
 	{
 		longToDateConverter = new LongToDateConverter();
 		localDateWriteConverter = new LocalDateWriteConverter();
 		localDateReadConverter = new LocalDateReadConverter();
+		usersReaderConverter = new UsersReaderConverter();
+		usersWriterConverter = new UsersWriterConverter();
 		converters = new ArrayList<Converter>();
 		converters.add(localDateReadConverter);
 		converters.add(localDateWriteConverter);
 		converters.add(longToDateConverter);
+		converters.add(usersWriterConverter);
+		//converters.add(usersReaderConverter);
+		
 	}
 	
 	public List<Converter> getAllConverters(){
 		
 		return converters;
-		
 	}
+	
+	
+	@Component
+	public class UsersWriterConverter implements Converter<Users, DBObject> {
+	    @Override
+	    public DBObject convert(Users users) {
+	    	System.out.println("XXXXXXXXXXXXXXXXXXXXXXXGGGGGGGG");
+	    	BasicDBObject dbObject = new BasicDBObject();
+	        
+	        BasicDBObject document = new BasicDBObject();
+			document = MongoUtils.getDbObject(users);
+			
+	        /*dbObject.put("age", user.getAge());*/
+	        /*if (user.getEmailAddress() != null) {
+	            DBObject emailDbObject = new BasicDBObject();
+	            emailDbObject.put("value", user.getEmailAddress().getValue());
+	            dbObject.put("email", emailDbObject);
+	        }*/
+	       /* dbObject.removeField("_class");*/
+	        return document;
+	    }
+	}
+	
+	@Component
+	public class UsersReaderConverter implements Converter<DBObject, Users> {
+	    @Override
+	    public Users convert(DBObject dbObject) {
+	    	Users users = new Users();
+	    	users.setGSTNumber(dbObject.get("gstnumber").toString());
+	    	//users.setAddress((Address)dbObject.get("address")); 
+	        /*dbObject.put("age", user.getAge());*/
+	        if (dbObject.get("address") != null) {
+	        	Address address = new Address();
+	            DBObject emailDbObject = new BasicDBObject();
+	            emailDbObject = (DBObject) dbObject.get("address");
+	            address.setAddressLine1((emailDbObject.get("addressLine1").toString()));
+	            address.setAddressLine2((emailDbObject.get("addressLine2").toString()));
+	            users.setAddress(address);
+	        }
+	       /* dbObject.removeField("_class");*/
+	        return users;
+	    }
+	}
+	
 	
 	public class LongToDateConverter implements Converter<Long, Date> {
 
