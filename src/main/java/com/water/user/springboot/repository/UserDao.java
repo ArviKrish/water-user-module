@@ -42,6 +42,8 @@ import com.water.user.springboot.util.MongoUtils;
 		    this.mongoTemplate = mongoTemplate;
 		}
 		
+		
+		
 		public Users inserUser(Users users) {
 			
 
@@ -98,6 +100,8 @@ import com.water.user.springboot.util.MongoUtils;
 			DBObject basicDBObject = collection.findOne(query);
 			if(basicDBObject != null) {
 			Users users = mongoTemplate.getConverter().read(Users.class, basicDBObject); 
+			
+			
 			return users;
 			}
 			throw new LoginException("Login Failed - Incorrect Phone number or Password");

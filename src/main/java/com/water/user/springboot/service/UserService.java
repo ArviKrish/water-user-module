@@ -1,5 +1,7 @@
 package com.water.user.springboot.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ public class UserService {
 	
 	public Users insertUser(Users users) {
 		
+		/*users.setCreateDateTime(LocalDateTime.now());
+		users.setLastUpdatedDateTime(LocalDateTime.now());*/
 		return userDao.inserUser(users);
 	}
 	
