@@ -56,7 +56,9 @@ public class UsersResource {
     		throw new LoginException("Phone number and Password cannot be empty");
         try {
 			return userService.authenticateUser(queryMap.get("phoneNumber"), queryMap.get("password"));
-		} catch (Exception e) {
+		} catch (LoginException e) {
+			throw new LoginException(e.getMessage());
+		}catch (Exception e) {
 			throw new InternalError(e.getMessage());
 		}
     }
@@ -72,7 +74,6 @@ public class UsersResource {
     	catch (Exception e) {
     		throw new InternalError(e.getMessage());
 		}
-
     }
     
 }
