@@ -31,9 +31,14 @@ public class UserService {
 		return userRepositoryImpl.insertUser(users);
 	}
 	
-	public Users authenticateUser(String phoneNumber, String password) throws Exception {
+	public boolean authenticateUser(String phoneNumber, String password) throws Exception {
 		
 		return userRepositoryImpl.validateUserByPhoneNumber(phoneNumber, password);
+	}
+
+	public Users getUser(String phoneNumber) throws Exception {
+		
+		return userRepositoryImpl.getUser(phoneNumber);
 	}
 	
 }

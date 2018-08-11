@@ -22,15 +22,11 @@ public class RepositoryImpl {
     
     @Autowired
     protected MongoUtils mongoUtils;
-	
-    
-
     
 	 @Autowired
 	    public RepositoryImpl(MongoDbFactory mongoDbFactory, MappingMongoConverter mappingMongoConverter, CustomConverters customConverters, MongoOperations mongoOperations) {
 	        this.mongoDbFactory = mongoDbFactory;
 	        this.mongoTemplate = new MongoTemplate(mongoDbFactory, mappingMongoConverter);
-	        System.out.println(customConverters);
 	        mappingMongoConverter.setCustomConversions(new CustomConversions(customConverters.getAllConverters()));
 	        mappingMongoConverter.afterPropertiesSet();
 	        this.mappingMongoConverter = mappingMongoConverter;

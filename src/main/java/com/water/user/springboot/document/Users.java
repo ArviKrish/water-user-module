@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Convert;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
@@ -21,7 +23,7 @@ public class Users extends DTO {
 	@Id
     private String id;
     
-	@Phone
+	@Phone()
 	private String phoneNumber;
 	
 	private String alternatePhoneNumber;
@@ -30,13 +32,13 @@ public class Users extends DTO {
 	
 	private String contactPersonSecondary;
 	
-	@NotEmpty
 	private String password;  
 	
-	@NotEmpty
+	@NotEmpty(message="Name cannot be empty")
+	@NotNull(message="Name cannot be null")
+	@Size(min=10, message="Name should have atleast 10 characters")
 	private String organizationName;
 	
-    @NotEmpty
     private String emailId;
     
     private Address address;

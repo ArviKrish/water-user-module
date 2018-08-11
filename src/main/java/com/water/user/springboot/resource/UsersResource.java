@@ -7,6 +7,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.SystemPropertyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.water.user.springboot.Responses.ErrorMessage;
 import com.water.user.springboot.Responses.Response;
 import com.water.user.springboot.config.Configurations;
 import com.water.user.springboot.document.Users;
@@ -22,7 +27,11 @@ import com.water.user.springboot.exceptions.LoginException;
 import com.water.user.springboot.exceptions.PhoneNumberExistsException;
 import com.water.user.springboot.repository.UserRepository;
 import com.water.user.springboot.service.UserService;
+import com.water.user.springboot.service.responsegenerator.ResponseGenerator;
+import com.water.user.springboot.validator.RequestParammm;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -39,6 +48,8 @@ public class UsersResource<T> {
     private UserService userService;
     @Autowired
     private Configurations configurations;
+    @Autowired
+    private ResponseGenerator responseGenerator;
     
     @Autowired
     @Qualifier("myProperties")
@@ -61,32 +72,49 @@ public class UsersResource<T> {
     	if(queryMap.get("phoneNumber").equalsIgnoreCase("")||queryMap.get("password").equalsIgnoreCase(""))
     		throw new LoginException("Phone number and Password cannot be empty");
         try {
-			Users users = userService.authenticateUser(queryMap.get("phoneNumber"), queryMap.get("password"));
-			ResponseEntity<Object> responseEntity = new ResponseEntity<Object>(HttpStatus.ACCEPTED);
-			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-			return new ResponseEntity<Response>(new Response("001", "Authentication Success", users.getId()), responseHeaders,HttpStatus.OK);
+			userService.authenticateUser(queryMap.get("phoneNumber"), queryMap.get("password"));
+			return responseGenerator.createResponse(null, "Authentication Success","001",HttpStatus.OK);
 		} catch (LoginException e) {
-			throw new LoginException(e.getMessage());
+			return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.BAD_REQUEST, null);
 		}catch (Exception e) {
-			throw new InternalError(e.getMessage());
+			return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.INTERNAL_SERVER_ERROR, null);
+		}
+    }
+    
+    @GetMapping("/getUser")
+    @ResponseBody
+    @Validated
+    public ResponseEntity<Response> getUser(@RequestParam Map<String, String> queryMap) {
+    	
+    	try {
+    		
+    	if(queryMap.get("phoneNumber").equalsIgnoreCase(""))
+    		throw new LoginException("Phone number not provided");
+			Users user = userService.getUser(queryMap.get("phoneNumber"));
+			return responseGenerator.createResponse(user, null,"001",HttpStatus.OK);
+		} catch (LoginException e) {
+			return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.BAD_REQUEST, null);
+		}catch (Exception e) {
+			return responseGenerator.createErrorResponse("Internal Server Error", "1000", HttpStatus.INTERNAL_SERVER_ERROR, null);
 		}
     }
     
     @RequestMapping(value = "/createuser", method = RequestMethod.POST)
-    public ResponseEntity<Response> createUser( @Valid  @RequestBody Users users) {
+    public ResponseEntity<Response> createUser( @Valid  @RequestBody Users users, BindingResult bindingResult) {
     	
     	try {
+    		if (bindingResult.hasErrors()) {
+    		return responseGenerator.createErrorResponse("Validation Error", "1000", HttpStatus.BAD_REQUEST, bindingResult.getAllErrors());	
+    		}
 			userService.insertUser(users);
-			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-			return new ResponseEntity<Response>(new Response("001", "Registration successful", users.getId()), responseHeaders,HttpStatus.OK);
+			return responseGenerator.createResponse(null, "Registration successful","001",HttpStatus.OK);
 			
 		} catch (PhoneNumberExistsException e) {
-			throw new PhoneNumberExistsException(e.getMessage());
-		}
+			return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.BAD_REQUEST, null);
+		}			
+				
     	catch (Exception e) {
-    		throw new InternalError(e.getMessage());
+    		return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.INTERNAL_SERVER_ERROR, null);
 		}
     }
     

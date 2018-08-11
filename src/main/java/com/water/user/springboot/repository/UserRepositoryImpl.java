@@ -30,7 +30,7 @@ public class UserRepositoryImpl extends RepositoryImpl  {
 	    try {
 
 	    	if(isPhoneNumberRegistered(users.getPhoneNumber())) {
-	    		throw new PhoneNumberExistsException("");
+	    		throw new PhoneNumberExistsException("Phone number is already registered with the system");
 	    	}
 		DBObject document = new BasicDBObject();
 		convertWrite(users, document);
@@ -54,7 +54,7 @@ public class UserRepositoryImpl extends RepositoryImpl  {
 	}
 
 	
-    public Users validateUserByPhoneNumber(String phoneNumber, String password) throws Exception {
+    public boolean validateUserByPhoneNumber(String phoneNumber, String password) throws Exception {
 
 		DBObject query = new QueryBuilder().start()
 				.and(new QueryBuilder().start().put("phoneNumber").is(phoneNumber).get(),
@@ -62,8 +62,20 @@ public class UserRepositoryImpl extends RepositoryImpl  {
 
 		DBObject basicDBObject = findOneObject(Constants.COLLECTION_USERS,query);
 		if (basicDBObject != null) {
-			return (Users) convertRead(Users.class, basicDBObject);
+			return true;
 		}
 		throw new LoginException("Login Failed - Incorrect Phone number or Password provided");
+	}
+
+
+	public Users getUser(String phoneNumber) throws Exception {
+
+		DBObject query = new QueryBuilder().start().put("phoneNumber").is(phoneNumber).get();
+		
+		DBObject basicDBObject = findOneObject(Constants.COLLECTION_USERS,query);
+		if (basicDBObject == null) {
+			throw new LoginException("User not found");
+		}
+		return (Users) convertRead(Users.class, basicDBObject);
 	}
 }

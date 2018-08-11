@@ -16,3 +16,9 @@ dbProps:
   host: localhost
   port: 27017
   name: mongo
+  
+com:
+  mycompany:
+    constraints:
+      CheckCase:
+        message: MyMessage
