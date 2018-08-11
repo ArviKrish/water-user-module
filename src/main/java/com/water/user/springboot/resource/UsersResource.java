@@ -25,9 +25,11 @@ import com.water.user.springboot.config.Configurations;
 import com.water.user.springboot.document.Users;
 import com.water.user.springboot.exceptions.LoginException;
 import com.water.user.springboot.exceptions.PhoneNumberExistsException;
+import com.water.user.springboot.exceptions.ValidationException;
 import com.water.user.springboot.repository.UserRepository;
 import com.water.user.springboot.service.UserService;
 import com.water.user.springboot.service.responsegenerator.ResponseGenerator;
+import com.water.user.springboot.util.StringUtils;
 import com.water.user.springboot.validator.RequestParammm;
 
 import java.util.ArrayList;
@@ -69,12 +71,12 @@ public class UsersResource<T> {
     @ResponseBody
     public ResponseEntity<Response> authenticateUser(@RequestParam Map<String, String> queryMap) {
     	
-    	if(queryMap.get("phoneNumber").equalsIgnoreCase("")||queryMap.get("password").equalsIgnoreCase(""))
-    		throw new LoginException("Phone number and Password cannot be empty");
-        try {
+    	try {
+    	if(!StringUtils.isValidRequest(queryMap, "phoneNumber")||!StringUtils.isValidRequest(queryMap, "password"))
+    		throw new ValidationException("Phone number and Password cannot be empty");
 			userService.authenticateUser(queryMap.get("phoneNumber"), queryMap.get("password"));
 			return responseGenerator.createResponse(null, "Authentication Success","001",HttpStatus.OK);
-		} catch (LoginException e) {
+		} catch (LoginException| ValidationException e) {
 			return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.BAD_REQUEST, null);
 		}catch (Exception e) {
 			return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.INTERNAL_SERVER_ERROR, null);
@@ -88,17 +90,17 @@ public class UsersResource<T> {
     	
     	try {
     		
-    	if(queryMap.get("phoneNumber").equalsIgnoreCase(""))
-    		throw new LoginException("Phone number not provided");
+    	if(!StringUtils.isValidRequest(queryMap, "phoneNumber"))
+    		throw new ValidationException("Required parameters not provided");
 			Users user = userService.getUser(queryMap.get("phoneNumber"));
 			return responseGenerator.createResponse(user, null,"001",HttpStatus.OK);
-		} catch (LoginException e) {
+		} catch (ValidationException e) {
 			return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.BAD_REQUEST, null);
 		}catch (Exception e) {
 			return responseGenerator.createErrorResponse("Internal Server Error", "1000", HttpStatus.INTERNAL_SERVER_ERROR, null);
 		}
     }
-    
+
     @RequestMapping(value = "/createuser", method = RequestMethod.POST)
     public ResponseEntity<Response> createUser( @Valid  @RequestBody Users users, BindingResult bindingResult) {
     	

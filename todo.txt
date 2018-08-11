@@ -1,6 +1,5 @@
 Move the error generator to Java 8 and generic code
 convert all messages to {messages}
-custom error validation for get operation request params generic
 move constants to constants file
 
 
