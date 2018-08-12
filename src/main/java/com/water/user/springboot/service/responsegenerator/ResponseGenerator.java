@@ -13,6 +13,7 @@ import org.springframework.validation.ObjectError;
 
 import com.water.user.springboot.Responses.ErrorMessage;
 import com.water.user.springboot.Responses.Response;
+import com.water.user.springboot.constants.Constants;
 
 @Component
 public class ResponseGenerator {
@@ -33,7 +34,6 @@ public class ResponseGenerator {
         	for (Iterator<ObjectError> iterator = validationErrors.iterator(); iterator.hasNext();) {
         		ErrorMessage errorMessage = new ErrorMessage();
 				ObjectError objectError = iterator.next();
-				System.out.println(objectError.getDefaultMessage());
 				errorMessage.setErrorCode(objectError.getCode());
 				errorMessage.setErrorMessage(objectError.getDefaultMessage());
 				errorMessage.setField(objectError.getObjectName());
@@ -42,7 +42,7 @@ public class ResponseGenerator {
     	} else {
     		
     		ErrorMessage errorMessage = new ErrorMessage();
-    		errorMessage.setErrorCode("1000");
+    		errorMessage.setErrorCode(Constants.ERROR_CODE_1000);
     		errorMessage.setErrorMessage(message);
     		errorMessages.add(errorMessage);
     	}

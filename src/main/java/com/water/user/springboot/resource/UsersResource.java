@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.water.user.springboot.Responses.ErrorMessage;
 import com.water.user.springboot.Responses.Response;
 import com.water.user.springboot.config.Configurations;
+import com.water.user.springboot.config.Messages;
+import com.water.user.springboot.constants.Constants;
 import com.water.user.springboot.document.Users;
 import com.water.user.springboot.exceptions.LoginException;
 import com.water.user.springboot.exceptions.PhoneNumberExistsException;
@@ -30,7 +32,6 @@ import com.water.user.springboot.repository.UserRepository;
 import com.water.user.springboot.service.UserService;
 import com.water.user.springboot.service.responsegenerator.ResponseGenerator;
 import com.water.user.springboot.util.StringUtils;
-import com.water.user.springboot.validator.RequestParammm;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,6 +53,8 @@ public class UsersResource<T> {
     private Configurations configurations;
     @Autowired
     private ResponseGenerator responseGenerator;
+    @Autowired
+    Messages messages;
     
     @Autowired
     @Qualifier("myProperties")
@@ -72,14 +75,14 @@ public class UsersResource<T> {
     public ResponseEntity<Response> authenticateUser(@RequestParam Map<String, String> queryMap) {
     	
     	try {
-    	if(!StringUtils.isValidRequest(queryMap, "phoneNumber")||!StringUtils.isValidRequest(queryMap, "password"))
-    		throw new ValidationException("Phone number and Password cannot be empty");
-			userService.authenticateUser(queryMap.get("phoneNumber"), queryMap.get("password"));
-			return responseGenerator.createResponse(null, "Authentication Success","001",HttpStatus.OK);
+    	if(!StringUtils.isValidRequest(queryMap, Constants.PHONE_NUMBER)||!StringUtils.isValidRequest(queryMap, Constants.PASSWORD))
+    		throw new ValidationException(messages.get("phonenumber.password.missing"));
+			userService.authenticateUser(queryMap.get(Constants.PHONE_NUMBER), queryMap.get(Constants.PASSWORD));
+			return responseGenerator.createResponse(null, messages.get("authentication.success"),Constants.ERROR_CODE_001,HttpStatus.OK);
 		} catch (LoginException| ValidationException e) {
-			return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.BAD_REQUEST, null);
+			return responseGenerator.createErrorResponse(e.getMessage(), Constants.ERROR_CODE_1000, HttpStatus.BAD_REQUEST, null);
 		}catch (Exception e) {
-			return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.INTERNAL_SERVER_ERROR, null);
+			return responseGenerator.createErrorResponse(e.getMessage(), Constants.ERROR_CODE_1000, HttpStatus.INTERNAL_SERVER_ERROR, null);
 		}
     }
     
@@ -90,14 +93,14 @@ public class UsersResource<T> {
     	
     	try {
     		
-    	if(!StringUtils.isValidRequest(queryMap, "phoneNumber"))
-    		throw new ValidationException("Required parameters not provided");
-			Users user = userService.getUser(queryMap.get("phoneNumber"));
-			return responseGenerator.createResponse(user, null,"001",HttpStatus.OK);
+    	if(!StringUtils.isValidRequest(queryMap, Constants.PHONE_NUMBER))
+    		throw new ValidationException(messages.get("paramertes.not.provided"));
+			Users user = userService.getUser(queryMap.get(Constants.PHONE_NUMBER));
+			return responseGenerator.createResponse(user, null,Constants.ERROR_CODE_001,HttpStatus.OK);
 		} catch (ValidationException e) {
-			return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.BAD_REQUEST, null);
+			return responseGenerator.createErrorResponse(e.getMessage(), Constants.ERROR_CODE_1000, HttpStatus.BAD_REQUEST, null);
 		}catch (Exception e) {
-			return responseGenerator.createErrorResponse("Internal Server Error", "1000", HttpStatus.INTERNAL_SERVER_ERROR, null);
+			return responseGenerator.createErrorResponse(messages.get("internal.server.error"), Constants.ERROR_CODE_1000, HttpStatus.INTERNAL_SERVER_ERROR, null);
 		}
     }
 
@@ -106,17 +109,17 @@ public class UsersResource<T> {
     	
     	try {
     		if (bindingResult.hasErrors()) {
-    		return responseGenerator.createErrorResponse("Validation Error", "1000", HttpStatus.BAD_REQUEST, bindingResult.getAllErrors());	
+    		return responseGenerator.createErrorResponse(messages.get("validation.error"), Constants.ERROR_CODE_1000, HttpStatus.BAD_REQUEST, bindingResult.getAllErrors());	
     		}
 			userService.insertUser(users);
-			return responseGenerator.createResponse(null, "Registration successful","001",HttpStatus.OK);
+			return responseGenerator.createResponse(null, messages.get("registration.succesful"), Constants.ERROR_CODE_001, HttpStatus.OK);
 			
 		} catch (PhoneNumberExistsException e) {
-			return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.BAD_REQUEST, null);
+			return responseGenerator.createErrorResponse(e.getMessage(), Constants.ERROR_CODE_1000, HttpStatus.BAD_REQUEST, null);
 		}			
 				
     	catch (Exception e) {
-    		return responseGenerator.createErrorResponse(e.getMessage(), "1000", HttpStatus.INTERNAL_SERVER_ERROR, null);
+    		return responseGenerator.createErrorResponse(e.getMessage(), Constants.ERROR_CODE_1000, HttpStatus.INTERNAL_SERVER_ERROR, null);
 		}
     }
     

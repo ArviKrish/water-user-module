@@ -8,6 +8,7 @@ import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.water.user.springboot.constants.Constants;
 import com.water.user.springboot.document.Users;
 import com.water.user.springboot.repository.UserRepositoryImpl;
 
@@ -22,10 +23,7 @@ public class UserService {
 	public Users insertUser(Users users) throws Exception {
 		
 		Date dNow = new Date( );
-	      SimpleDateFormat ft = 
-	      new SimpleDateFormat ("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
-
-	      
+	    SimpleDateFormat ft = new SimpleDateFormat (Constants.DATE_FORMAT);
 		users.setCreateDateTime(ft.format(dNow));
 		users.setLastUpdatedDateTime(ft.format(dNow));
 		return userRepositoryImpl.insertUser(users);
