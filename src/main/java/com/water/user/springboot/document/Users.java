@@ -1,20 +1,14 @@
 package com.water.user.springboot.document;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Convert;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
-
-import com.water.user.springboot.config.LocalDateTimeConverter;
 import com.water.user.springboot.validator.Phone;
 
 @Document
@@ -47,6 +41,7 @@ public class Users extends DTO {
     
     private String GSTNumber;
     
+    @Value("${prefered.payment.type:CODY}")
     private String preferedPaymentType;
     
     private String createDateTime;

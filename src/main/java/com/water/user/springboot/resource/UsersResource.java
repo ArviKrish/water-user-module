@@ -33,8 +33,6 @@ import com.water.user.springboot.service.UserService;
 import com.water.user.springboot.service.responsegenerator.ResponseGenerator;
 import com.water.user.springboot.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;

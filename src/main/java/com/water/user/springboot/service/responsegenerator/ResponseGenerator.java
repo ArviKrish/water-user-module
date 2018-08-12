@@ -3,6 +3,7 @@ package com.water.user.springboot.service.responsegenerator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,17 +31,17 @@ public class ResponseGenerator {
 		
     	List<ErrorMessage> errorMessages = new ArrayList<ErrorMessage>();
     	
+    	Consumer<ObjectError> errorResponseCreator = objectError -> {
+    		ErrorMessage errorMessage = new ErrorMessage();
+    		errorMessage.setErrorCode(objectError.getCode());
+    		errorMessage.setErrorMessage(objectError.getDefaultMessage());
+    		errorMessage.setField(objectError.getObjectName());
+    		errorMessages.add(errorMessage);
+    	};
+    	
     	if(validationErrors != null) {
-        	for (Iterator<ObjectError> iterator = validationErrors.iterator(); iterator.hasNext();) {
-        		ErrorMessage errorMessage = new ErrorMessage();
-				ObjectError objectError = iterator.next();
-				errorMessage.setErrorCode(objectError.getCode());
-				errorMessage.setErrorMessage(objectError.getDefaultMessage());
-				errorMessage.setField(objectError.getObjectName());
-				errorMessages.add(errorMessage);
-			}
+    		validationErrors.forEach(errorResponseCreator);
     	} else {
-    		
     		ErrorMessage errorMessage = new ErrorMessage();
     		errorMessage.setErrorCode(Constants.ERROR_CODE_1000);
     		errorMessage.setErrorMessage(message);

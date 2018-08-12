@@ -10,7 +10,7 @@ spring:
         enabled: true
 
 server:
-  port: 8075
+  port: 7022
 
 dbProps:
   host: localhost

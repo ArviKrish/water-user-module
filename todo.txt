@@ -1,14 +1,11 @@
 Move the error generator to Java 8 and generic code
-convert all messages to {messages}
-move constants to constants file
-
-
-
 user dao to user repositry implementation
+create pagination
+
+
 
 logger
 
-validator
 
 index
 
