@@ -6,19 +6,18 @@ import java.util.Date;
 
 import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.water.user.springboot.constants.Constants;
 import com.water.user.springboot.document.Users;
-import com.water.user.springboot.repository.UserRepositoryImpl;
+import com.water.user.springboot.repository.UsersRepository;
 
 @Service
 public class UserService {
 
-	
 	@Autowired
-	private UserRepositoryImpl userRepositoryImpl;
-	
+	private UsersRepository repository;
 	
 	public Users insertUser(Users users) throws Exception {
 		
@@ -26,17 +25,19 @@ public class UserService {
 	    SimpleDateFormat ft = new SimpleDateFormat (Constants.DATE_FORMAT);
 		users.setCreateDateTime(ft.format(dNow));
 		users.setLastUpdatedDateTime(ft.format(dNow));
-		return userRepositoryImpl.insertUser(users);
+		return repository.insertUser(users);
 	}
 	
 	public boolean authenticateUser(String phoneNumber, String password) throws Exception {
 		
-		return userRepositoryImpl.validateUserByPhoneNumber(phoneNumber, password);
+		return repository.validateUserByPhoneNumber(phoneNumber, password);
 	}
 
 	public Users getUser(String phoneNumber) throws Exception {
 		
-		return userRepositoryImpl.getUser(phoneNumber);
+		return repository.findByPhoneNumber(phoneNumber);
 	}
+	
+	
 	
 }

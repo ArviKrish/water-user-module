@@ -28,7 +28,6 @@ import com.water.user.springboot.document.Users;
 import com.water.user.springboot.exceptions.LoginException;
 import com.water.user.springboot.exceptions.PhoneNumberExistsException;
 import com.water.user.springboot.exceptions.ValidationException;
-import com.water.user.springboot.repository.UserRepository;
 import com.water.user.springboot.service.UserService;
 import com.water.user.springboot.service.responsegenerator.ResponseGenerator;
 import com.water.user.springboot.util.StringUtils;
@@ -43,8 +42,6 @@ import javax.validation.Valid;
 @RequestMapping("/users")
 public class UsersResource<T> {
 
-    private UserRepository userRepository;
-    
     @Autowired
     private UserService userService;
     @Autowired
@@ -58,16 +55,6 @@ public class UsersResource<T> {
     @Qualifier("myProperties")
     private Properties myProperties;
 
-    public UsersResource(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @GetMapping("/all")
-    public List<Users> getAll() {
-    	
-        return userRepository.findAll();
-    }
-    
     @GetMapping("/authenticateUser")
     @ResponseBody
     public ResponseEntity<Response> authenticateUser(@RequestParam Map<String, String> queryMap) {
@@ -94,6 +81,8 @@ public class UsersResource<T> {
     	if(!StringUtils.isValidRequest(queryMap, Constants.PHONE_NUMBER))
     		throw new ValidationException(messages.get("paramertes.not.provided"));
 			Users user = userService.getUser(queryMap.get(Constants.PHONE_NUMBER));
+			if(user == null)
+			throw new ValidationException(messages.get("user.not.found"));
 			return responseGenerator.createResponse(user, null,Constants.ERROR_CODE_001,HttpStatus.OK);
 		} catch (ValidationException e) {
 			return responseGenerator.createErrorResponse(e.getMessage(), Constants.ERROR_CODE_1000, HttpStatus.BAD_REQUEST, null);

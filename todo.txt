@@ -1,6 +1,10 @@
-Move the error generator to Java 8 and generic code
-user dao to user repositry implementation
 create pagination
+https://lishman.io/spring-data-mongodb-repositories
+
+https://medium.com/@depu19/customizing-spring-data-mongodb-e75c729dc861
+https://blog.marcnuri.com/spring-data-mongodb-custom-repository-implementation/
+https://stackoverflow.com/questions/17035419/spring-data-mongodb-custom-implementation-propertyreferenceexception
+where to place spring config, mongo config xml files.. like spring-data.xml
 
 
 

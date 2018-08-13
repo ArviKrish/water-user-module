@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.stereotype.Repository;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -18,17 +19,18 @@ import com.water.user.springboot.exceptions.LoginException;
 import com.water.user.springboot.exceptions.PhoneNumberExistsException;
 import com.water.user.springboot.exceptions.ValidationException;
 
-public class UserRepositoryImpl extends RepositoryImpl  {
+@Repository
+public class UsersRepositoryImpl extends RepositoryImpl implements UsersRepositoryCustom  {
 	
 	 @Autowired
 	    Messages messages;
 	
-	public UserRepositoryImpl(MongoDbFactory mongoDbFactory, MappingMongoConverter mappingMongoConverter,
+	public UsersRepositoryImpl(MongoDbFactory mongoDbFactory, MappingMongoConverter mappingMongoConverter,
 			CustomConverters customConverters, MongoOperations mongoOperations) {
-		super(mongoDbFactory, mappingMongoConverter, customConverters, mongoOperations);
-	}
+		super(mongoDbFactory, mappingMongoConverter, customConverters, mongoOperations); 
+	} 
 
-    
+    @Override
     public Users insertUser(Users users) throws Exception {
 	    try {
 
@@ -56,7 +58,7 @@ public class UserRepositoryImpl extends RepositoryImpl  {
 		return isAvailable(Constants.COLLECTION_USERS, query);
 	}
 
-	
+	@Override
     public boolean validateUserByPhoneNumber(String phoneNumber, String password) throws Exception {
 
 		DBObject query = new QueryBuilder().start()
@@ -70,7 +72,7 @@ public class UserRepositoryImpl extends RepositoryImpl  {
 		throw new LoginException(messages.get("login.fail.incorrect.credentials"));
 	}
 
-
+	@Override
 	public Users getUser(String phoneNumber) throws Exception {
 
 		DBObject query = new QueryBuilder().start().put(Constants.PHONE_NUMBER).is(phoneNumber).get();
