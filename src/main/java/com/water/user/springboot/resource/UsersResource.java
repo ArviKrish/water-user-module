@@ -7,17 +7,21 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.util.SystemPropertyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.water.user.springboot.Responses.ErrorMessage;
 import com.water.user.springboot.Responses.Response;
@@ -25,6 +29,7 @@ import com.water.user.springboot.config.Configurations;
 import com.water.user.springboot.config.Messages;
 import com.water.user.springboot.constants.Constants;
 import com.water.user.springboot.document.Users;
+import com.water.user.springboot.exceptions.EmployeeNotFoundException;
 import com.water.user.springboot.exceptions.LoginException;
 import com.water.user.springboot.exceptions.PhoneNumberExistsException;
 import com.water.user.springboot.exceptions.ValidationException;
@@ -32,10 +37,13 @@ import com.water.user.springboot.service.UserService;
 import com.water.user.springboot.service.responsegenerator.ResponseGenerator;
 import com.water.user.springboot.util.StringUtils;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -109,5 +117,30 @@ public class UsersResource<T> {
     		return responseGenerator.createErrorResponse(e.getMessage(), Constants.ERROR_CODE_1000, HttpStatus.INTERNAL_SERVER_ERROR, null);
 		}
     }
+    
+    
+    
+    @RequestMapping(value="/emp/{id}", method=RequestMethod.GET)
+	public String getEmployee(@PathVariable("id") int id, Model model) throws Exception{
+		//deliberately throwing different types of exception
+		if(id==1){
+			throw new EmployeeNotFoundException(id);
+		}else if(id==2){
+			throw new SQLException("SQLException, id="+String.valueOf(id));
+		}else if(id==3){
+			throw new IOException("IOException, id="+String.valueOf(id));
+		}else if(id==10){
+			return "home";
+		}else {
+			throw new Exception("Generic Exception, id="+String.valueOf(id));
+		}
+		
+	}
+    
+    @ExceptionHandler(EmployeeNotFoundException.class)
+	public ResponseEntity<Response> handleEmployeeNotFoundException(HttpServletRequest request, Exception ex){
+		
+    	return responseGenerator.createErrorResponse(ex.getMessage(), Constants.ERROR_CODE_1000, HttpStatus.BAD_REQUEST, null);
+	}
     
 }
