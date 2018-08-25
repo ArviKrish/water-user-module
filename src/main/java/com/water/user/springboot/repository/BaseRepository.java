@@ -6,14 +6,17 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.CustomConversions;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 import com.mongodb.DBObject;
+import com.mongodb.WriteResult;
 import com.water.user.springboot.constants.Constants;
 import com.water.user.springboot.converters.CustomConverters;
 import com.water.user.springboot.document.Users;
 import com.water.user.springboot.util.MongoUtils;
 
-public class RepositoryImpl {
+public class BaseRepository {
 
 	protected MongoDbFactory mongoDbFactory;
 	protected MongoTemplate mongoTemplate;
@@ -24,7 +27,7 @@ public class RepositoryImpl {
     protected MongoUtils mongoUtils;
     
 	 @Autowired
-	    public RepositoryImpl(MongoDbFactory mongoDbFactory, MappingMongoConverter mappingMongoConverter, CustomConverters customConverters, MongoOperations mongoOperations) {
+	    public BaseRepository(MongoDbFactory mongoDbFactory, MappingMongoConverter mappingMongoConverter, CustomConverters customConverters, MongoOperations mongoOperations) {
 	        this.mongoDbFactory = mongoDbFactory;
 	        this.mongoTemplate = new MongoTemplate(mongoDbFactory, mappingMongoConverter);
 	        mappingMongoConverter.setCustomConversions(new CustomConversions(customConverters.getAllConverters()));
@@ -43,6 +46,15 @@ public class RepositoryImpl {
 	 
 	 protected void insertObject(DBObject document) {
 			mongoOperations.insert(document, Constants.COLLECTION_USERS);
+		}
+	 
+	 protected Object findOneObject(Query query, Class clazz) {
+		 	return mongoOperations.findOne(query, clazz);
+		}
+	 
+	 protected boolean updateFirst(Query query, Update update, Class clazz) {
+		 WriteResult writeResult =  mongoOperations.updateFirst(query, update, Users.class);
+		 return writeResult.isUpdateOfExisting();
 		}
 	 
 	 protected Object convertRead(Class clazz, DBObject basicDBObject) {

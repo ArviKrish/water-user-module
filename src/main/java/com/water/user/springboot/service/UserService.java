@@ -19,13 +19,13 @@ public class UserService {
 	@Autowired
 	private UsersRepository repository;
 	
-	public Users insertUser(Users users) throws Exception {
+	public void insertUser(Users users) throws Exception {
 		
 		Date dNow = new Date( );
 	    SimpleDateFormat ft = new SimpleDateFormat (Constants.DATE_FORMAT);
 		users.setCreateDateTime(ft.format(dNow));
 		users.setLastUpdatedDateTime(ft.format(dNow));
-		return repository.insertUser(users);
+		repository.insertUser(users);
 	}
 	
 	public boolean authenticateUser(String phoneNumber, String password) throws Exception {
@@ -36,6 +36,11 @@ public class UserService {
 	public Users getUser(String phoneNumber) throws Exception {
 		
 		return repository.findByPhoneNumber(phoneNumber);
+	}
+
+	public boolean updateUser(Users users) throws Exception {
+
+		return repository.updateUser(users);
 	}
 	
 	
