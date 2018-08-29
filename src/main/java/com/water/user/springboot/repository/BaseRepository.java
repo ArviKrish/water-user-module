@@ -44,8 +44,8 @@ public class BaseRepository {
 			return mongoOperations.getCollection(collectionName).findOne(query);
 		}
 	 
-	 protected void insertObject(DBObject document) {
-			mongoOperations.insert(document, Constants.COLLECTION_USERS);
+	 protected void insertObject(DBObject document, String collectionName) {
+			mongoOperations.insert(document, collectionName);
 		}
 	 
 	 protected Object findOneObject(Query query, Class clazz) {

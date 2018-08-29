@@ -3,7 +3,8 @@ package com.water.user.springboot.constants;
 public class Constants {
 
 
-	public static final String COLLECTION_USERS = "users";
+	public static final String COLLECTION_WAHTER_USERS = "wahter_users";
+	public static final String COLLECTION_POTENTIAL_USERS = "potential_users";
 	
 	public static final String PHONE_NUMBER = "phoneNumber";
 	public static final String PASSWORD = "password";

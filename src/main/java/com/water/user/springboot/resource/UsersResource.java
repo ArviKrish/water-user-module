@@ -18,7 +18,9 @@ import com.water.user.springboot.Responses.Response;
 import com.water.user.springboot.config.Configurations;
 import com.water.user.springboot.config.Messages;
 import com.water.user.springboot.constants.Constants;
+import com.water.user.springboot.document.PotentialUsers;
 import com.water.user.springboot.document.Users;
+import com.water.user.springboot.document.WahterUsers;
 import com.water.user.springboot.exceptions.UnknownException;
 import com.water.user.springboot.exceptions.ValidationException;
 import com.water.user.springboot.service.UserService;
@@ -71,15 +73,36 @@ public class UsersResource<T> {
 			return responseGenerator.createResponse(user, null,Constants.ERROR_CODE_001,HttpStatus.OK);
     }
     
+    @RequestMapping(value = "/validatePhoneNumber", method = RequestMethod.GET)
+    @ResponseBody
+    @Validated
+    public ResponseEntity<Response> validatePhoneNumber(@RequestParam Map<String, String> queryMap) throws Exception {
+    	
+    		if(!StringUtils.isValidRequest(queryMap, Constants.PHONE_NUMBER))
+    		throw new ValidationException(messages.get("paramertes.not.provided"));
+    		userService.validatePhoneNumber(queryMap.get(Constants.PHONE_NUMBER));
+			return responseGenerator.createResponse(null, "Phone nmber is not registered",Constants.ERROR_CODE_001,HttpStatus.OK);
+     }
+    
     
 
-    @RequestMapping(value = "/createuser", method = RequestMethod.POST)
-    public ResponseEntity<Response> createUser( @Valid  @RequestBody Users users, BindingResult bindingResult) throws Exception {
+    @RequestMapping(value = "/createwahteruser", method = RequestMethod.POST)
+    public ResponseEntity<Response> createWahteruser( @Valid  @RequestBody WahterUsers wahterUsers, BindingResult bindingResult) throws Exception {
     	
     		if (bindingResult.hasErrors()) {
     		return responseGenerator.createErrorResponse(messages.get("validation.error"), Constants.ERROR_CODE_1000, HttpStatus.BAD_REQUEST, bindingResult.getAllErrors());	
     		}
-			userService.insertUser(users);
+			userService.insertWahterUser(wahterUsers);
+			return responseGenerator.createResponse(null, messages.get("registration.succesful"), Constants.ERROR_CODE_001, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/createpotentialuser", method = RequestMethod.POST)
+    public ResponseEntity<Response> createPotentialsUser( @Valid  @RequestBody PotentialUsers potentialUsers, BindingResult bindingResult) throws Exception {
+    	
+    		if (bindingResult.hasErrors()) {
+    		return responseGenerator.createErrorResponse(messages.get("validation.error"), Constants.ERROR_CODE_1000, HttpStatus.BAD_REQUEST, bindingResult.getAllErrors());	
+    		}
+			userService.insertPotentialUser(potentialUsers);
 			return responseGenerator.createResponse(null, messages.get("registration.succesful"), Constants.ERROR_CODE_001, HttpStatus.OK);
     }
     

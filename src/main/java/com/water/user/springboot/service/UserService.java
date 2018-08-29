@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.water.user.springboot.constants.Constants;
+import com.water.user.springboot.document.PotentialUsers;
 import com.water.user.springboot.document.Users;
+import com.water.user.springboot.document.WahterUsers;
 import com.water.user.springboot.repository.UsersRepository;
 
 @Service
@@ -19,13 +21,23 @@ public class UserService {
 	@Autowired
 	private UsersRepository repository;
 	
-	public void insertUser(Users users) throws Exception {
+	public void insertPotentialUser(PotentialUsers potential_users) throws Exception {
 		
 		Date dNow = new Date( );
 	    SimpleDateFormat ft = new SimpleDateFormat (Constants.DATE_FORMAT);
-		users.setCreateDateTime(ft.format(dNow));
-		users.setLastUpdatedDateTime(ft.format(dNow));
-		repository.insertUser(users);
+	    potential_users.setCreateDateTime(ft.format(dNow));
+	    potential_users.setLastUpdatedDateTime(ft.format(dNow));
+	    potential_users.setIsRekkiCleared(false);
+		repository.insertPotentialUser(potential_users);
+	}
+	
+	public void insertWahterUser(WahterUsers wahterUsers) throws Exception {	
+		
+		Date dNow = new Date( );
+	    SimpleDateFormat ft = new SimpleDateFormat (Constants.DATE_FORMAT);
+	    wahterUsers.setCreateDateTime(ft.format(dNow));
+	    wahterUsers.setLastUpdatedDateTime(ft.format(dNow));
+		repository.insertWahterUser(wahterUsers);
 	}
 	
 	public boolean authenticateUser(String phoneNumber, String password) throws Exception {
@@ -42,6 +54,10 @@ public class UserService {
 
 		return repository.updateUser(users);
 	}
+
+	public boolean validatePhoneNumber(String phoneNumber) throws Exception {
+		return repository.validatePhoneNumber(phoneNumber);
+		}
 	
 	
 	

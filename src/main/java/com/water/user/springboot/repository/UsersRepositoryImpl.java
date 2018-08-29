@@ -18,7 +18,9 @@ import com.mongodb.WriteResult;
 import com.water.user.springboot.config.Messages;
 import com.water.user.springboot.constants.Constants;
 import com.water.user.springboot.converters.CustomConverters;
+import com.water.user.springboot.document.PotentialUsers;
 import com.water.user.springboot.document.Users;
+import com.water.user.springboot.document.WahterUsers;
 import com.water.user.springboot.exceptions.LoginException;
 import com.water.user.springboot.exceptions.PhoneNumberExistsException;
 import com.water.user.springboot.exceptions.ValidationException;
@@ -35,18 +37,29 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 	} 
 
     @Override
-    public void insertUser(Users users) throws Exception {
+    public void insertWahterUser(WahterUsers wahterUsers) throws Exception {
 
-	    	if(isPhoneNumberRegistered(users.getPhoneNumber())) {
+	    	if(isPhoneNumberRegistered(wahterUsers.getPhoneNumber(), Constants.COLLECTION_WAHTER_USERS)) {
 	    		throw new PhoneNumberExistsException(messages.get("phonenumer.already.registered"));
 	    	}
 		DBObject document = new BasicDBObject();
-		convertWrite(users, document);
-		insertObject(document);
+		convertWrite(wahterUsers, document);
+		insertObject(document, Constants.COLLECTION_WAHTER_USERS);
 		
 		/*DBObject query = new QueryBuilder().start().put(Constants.PHONE_NUMBER).is(users.getPhoneNumber()).get();
 		DBObject basicDBObject = findOneObject(Constants.COLLECTION_USERS,query);
 		return (Users) convertRead(Users.class, basicDBObject);*/
+	}
+    
+    @Override
+    public void insertPotentialUser(PotentialUsers potential_users) throws Exception {
+
+	    	if(isPhoneNumberRegistered(potential_users.getPhoneNumber(), Constants.COLLECTION_POTENTIAL_USERS)) {
+	    		throw new PhoneNumberExistsException(messages.get("phonenumer.already.registered"));
+	    	}
+		DBObject document = new BasicDBObject();
+		convertWrite(potential_users, document);
+		insertObject(document, Constants.COLLECTION_POTENTIAL_USERS);
 	}
     
     @Override
@@ -67,10 +80,10 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 			return updateFirst(findUser, updateUser, Users.class);
 	}
 
-	private boolean isPhoneNumberRegistered(String phoneNumber) throws Exception {
+	private boolean isPhoneNumberRegistered(String phoneNumber, String collectionName) throws Exception {
 		
 		DBObject query = new QueryBuilder().start().put(Constants.PHONE_NUMBER).is(phoneNumber).get();
-		return isAvailable(Constants.COLLECTION_USERS, query);
+		return isAvailable(collectionName, query);
 	}
 
 	@Override
@@ -80,11 +93,34 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 				.and(new QueryBuilder().start().put(Constants.PHONE_NUMBER).is(phoneNumber).get(),
 						new QueryBuilder().start().put(Constants.PASSWORD).is(password).get()).get();
 
-		DBObject basicDBObject = findOneObject(Constants.COLLECTION_USERS,query);
-		if (basicDBObject != null) {
+		DBObject wahterUserObject = findOneObject(Constants.COLLECTION_WAHTER_USERS,query);
+		if (wahterUserObject != null) {
 			return true;
 		}
+		DBObject potentialUserObject = findOneObject(Constants.COLLECTION_POTENTIAL_USERS,query);
+		if (potentialUserObject != null) {
+			throw new LoginException("Your registration is being processed...");
+		}
+		
 		throw new LoginException(messages.get("login.fail.incorrect.credentials"));
+	}
+	
+	@Override
+    public boolean validatePhoneNumber(String phoneNumber) throws Exception {
+
+		DBObject query = new QueryBuilder().start()
+				.and(new QueryBuilder().start().put(Constants.PHONE_NUMBER).is(phoneNumber).get()).get();
+
+		DBObject wahterUserObject = findOneObject(Constants.COLLECTION_WAHTER_USERS,query);
+		if (wahterUserObject != null) {
+			throw new LoginException("Phone number is already registered...");
+		}
+		DBObject potentialUserObject = findOneObject(Constants.COLLECTION_POTENTIAL_USERS,query);
+		if (potentialUserObject != null) {
+			throw new LoginException("Phone number is already registered... Registration is being processed...");
+		}
+		
+		return true;
 	}
 
 	@Override
@@ -92,7 +128,7 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 
 		DBObject query = new QueryBuilder().start().put(Constants.PHONE_NUMBER).is(phoneNumber).get();
 		
-		DBObject basicDBObject = findOneObject(Constants.COLLECTION_USERS,query);
+		DBObject basicDBObject = findOneObject(Constants.COLLECTION_WAHTER_USERS,query);
 		if (basicDBObject == null) {
 			throw new ValidationException(messages.get("user.not.found"));
 		}
