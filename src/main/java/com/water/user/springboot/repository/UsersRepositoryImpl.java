@@ -68,7 +68,7 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 	    	findUser.addCriteria(Criteria.where(Constants.PHONE_NUMBER).is(users.getPhoneNumber()));
 	    	findUser.fields().include(Constants.PASSWORD);
 
-			Users selectedUser = (Users) findOneObject(findUser, Users.class);
+	    	WahterUsers selectedUser = (WahterUsers) findOneObject(findUser, WahterUsers.class);
 
 			if (selectedUser == null) {
 				throw new ValidationException(messages.get("user.not.found"));
@@ -77,7 +77,7 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 			Update updateUser = new Update();
 			updateUser.set(Constants.PASSWORD, users.getPassword());
 
-			return updateFirst(findUser, updateUser, Users.class);
+			return updateFirst(findUser, updateUser, WahterUsers.class);
 	}
 
 	private boolean isPhoneNumberRegistered(String phoneNumber, String collectionName) throws Exception {
