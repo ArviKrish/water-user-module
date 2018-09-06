@@ -25,11 +25,13 @@ import com.water.user.springboot.exceptions.UnknownException;
 import com.water.user.springboot.exceptions.ValidationException;
 import com.water.user.springboot.service.UserService;
 import com.water.user.springboot.service.responsegenerator.ResponseGenerator;
+import com.water.user.springboot.util.NotificationUtil;
 import com.water.user.springboot.util.StringUtils;
 
 import java.util.Map;
 import java.util.Properties;
 
+import javax.management.Notification;
 import javax.validation.Valid;
 
 @RestController
@@ -57,6 +59,15 @@ public class UsersResource<T> {
     		throw new ValidationException(messages.get("phonenumber.password.missing"));
 			userService.authenticateUser(queryMap.get(Constants.PHONE_NUMBER), queryMap.get(Constants.PASSWORD));
 			return responseGenerator.createResponse(null, messages.get("authentication.success"),Constants.ERROR_CODE_001,HttpStatus.OK);
+    }
+    
+    
+    @RequestMapping(value = "/sendNotification", method = RequestMethod.GET)
+    public String sendNotification(@RequestParam Map<String, String> queryMap) throws Exception {
+    	
+    	NotificationUtil.sendNotification();
+    		
+    	return "Completed";
     }
     
     
