@@ -66,14 +66,19 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 		insertObject(document, Constants.COLLECTION_POTENTIAL_USERS);
 	}
 
+<<<<<<< HEAD
 	@Override
 	public boolean updateUser(Users users) throws Exception {
 		Query findUser = new Query();
 		findUser.addCriteria(Criteria.where(Constants.PHONE_NUMBER).is(users.getPhoneNumber()));
 		findUser.fields().include(Constants.PASSWORD);
+=======
+	    	WahterUsers selectedUser = (WahterUsers) findOneObject(findUser, WahterUsers.class);
+>>>>>>> branch 'master' of https://github.com/ArviKrish/water-user-module
 
 		Users selectedUser = (Users) findOneObject(findUser, Users.class);
 
+<<<<<<< HEAD
 		if (selectedUser == null) {
 			throw new ValidationException(messages.get("user.not.found"));
 		}
@@ -82,6 +87,9 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 		updateUser.set(Constants.PASSWORD, users.getPassword());
 
 		return updateFirst(findUser, updateUser, Users.class);
+=======
+			return updateFirst(findUser, updateUser, WahterUsers.class);
+>>>>>>> branch 'master' of https://github.com/ArviKrish/water-user-module
 	}
 
 	private boolean isPhoneNumberRegistered(String phoneNumber, String collectionName) throws Exception {

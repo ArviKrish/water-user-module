@@ -53,7 +53,7 @@ public class BaseRepository {
 		}
 	 
 	 protected boolean updateFirst(Query query, Update update, Class clazz) {
-		 WriteResult writeResult =  mongoOperations.updateFirst(query, update, Users.class);
+		 WriteResult writeResult =  mongoOperations.updateFirst(query, update, clazz);
 		 return writeResult.isUpdateOfExisting();
 		}
 	 
