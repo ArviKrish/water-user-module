@@ -83,14 +83,14 @@ public class UsersResource<T> {
 			return responseGenerator.createResponse(user, null,Constants.RESPONSE_CODE_001,HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/validatePhoneNumberForSignUp", method = RequestMethod.GET)
+    @RequestMapping(value = "/validatePhoneNumber", method = RequestMethod.GET)
     @ResponseBody
     @Validated
-    public ResponseEntity<Response> validatePhoneNumberForSignUp(@RequestParam Map<String, String> queryMap) throws Exception {
+    public ResponseEntity<Response> validatePhoneNumber(@RequestParam Map<String, String> queryMap) throws Exception {
     	
     		if(!StringUtils.isValidRequest(queryMap, Constants.PHONE_NUMBER))
     		throw new ValidationException(messages.get("paramertes.not.provided"));
-    		return userService.validatePhoneNumberForSignUp(queryMap.get(Constants.PHONE_NUMBER));
+    		return userService.validatePhoneNumber(queryMap.get(Constants.PHONE_NUMBER));
      }
     
     

@@ -62,8 +62,8 @@ public class UserService {
 		return repository.updateUser(users);
 	}
 
-	public ResponseEntity<Response> validatePhoneNumberForSignUp(String phoneNumber) throws Exception {
-				if(repository.validatePhoneNumberForSignUp(phoneNumber))
+	public ResponseEntity<Response> validatePhoneNumber(String phoneNumber) throws Exception {
+				if(repository.validatePhoneNumber(phoneNumber))
 				return responseGenerator.createResponse(null, "Registration can be taken.",Constants.RESPONSE_CODE_001,HttpStatus.OK);
 				else
 				return responseGenerator.createResponse(null, "Phone number can be taken",Constants.RESPONSE_CODE_002,HttpStatus.OK);

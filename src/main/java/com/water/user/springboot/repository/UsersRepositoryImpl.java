@@ -125,7 +125,7 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 	}
 
 	@Override
-	public boolean validatePhoneNumberForSignUp(String phoneNumber) throws Exception {
+	public boolean validatePhoneNumber(String phoneNumber) throws Exception {
 
 		DBObject query = new QueryBuilder().start()
 				.and(new QueryBuilder().start().put(Constants.PHONE_NUMBER).is(phoneNumber).get()).get();
