@@ -5,6 +5,8 @@ public class Constants {
 
 	public static final String COLLECTION_WAHTER_USERS = "wahter_users";
 	public static final String COLLECTION_POTENTIAL_USERS = "potential_users";
+	public static final String COLLECTION_USER_MOBILE_NUMBERS = "User_mobile_numbers";
+
 	
 	public static final String PHONE_NUMBER = "phoneNumber";
 	public static final String PASSWORD = "password";
