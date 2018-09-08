@@ -55,6 +55,6 @@ public class UserMobileNumberResource {
     		return responseGenerator.createErrorResponse(messages.get("validation.error"), Constants.ERROR_CODE_1000, HttpStatus.BAD_REQUEST, bindingResult.getAllErrors());	
     		}
     		userMobileNumbersService.insertUserMobileNumbers(userMobileNumbers);
-			return responseGenerator.createResponse(null, "Thanks for your interest! We'll contact you shortly", Constants.ERROR_CODE_001, HttpStatus.OK);
+			return responseGenerator.createResponse(null, "Thanks for your interest! We'll contact you shortly", Constants.RESPONSE_CODE_001, HttpStatus.OK);
     }
 }

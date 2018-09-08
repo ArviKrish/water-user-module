@@ -31,7 +31,6 @@ import com.water.user.springboot.util.StringUtils;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.management.Notification;
 import javax.validation.Valid;
 
 @RestController
@@ -58,7 +57,7 @@ public class UsersResource<T> {
     	if(!StringUtils.isValidRequest(queryMap, Constants.PHONE_NUMBER)||!StringUtils.isValidRequest(queryMap, Constants.PASSWORD))
     		throw new ValidationException(messages.get("phonenumber.password.missing"));
 			userService.authenticateUser(queryMap.get(Constants.PHONE_NUMBER), queryMap.get(Constants.PASSWORD));
-			return responseGenerator.createResponse(null, messages.get("authentication.success"),Constants.ERROR_CODE_001,HttpStatus.OK);
+			return responseGenerator.createResponse(null, messages.get("authentication.success"),Constants.RESPONSE_CODE_001,HttpStatus.OK);
     }
     
     
@@ -81,18 +80,17 @@ public class UsersResource<T> {
 			Users user = userService.getUser(queryMap.get(Constants.PHONE_NUMBER));
 			if(user == null)
 			throw new ValidationException(messages.get("user.not.found"));
-			return responseGenerator.createResponse(user, null,Constants.ERROR_CODE_001,HttpStatus.OK);
+			return responseGenerator.createResponse(user, null,Constants.RESPONSE_CODE_001,HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/validatePhoneNumber", method = RequestMethod.GET)
+    @RequestMapping(value = "/validatePhoneNumberForSignUp", method = RequestMethod.GET)
     @ResponseBody
     @Validated
-    public ResponseEntity<Response> validatePhoneNumber(@RequestParam Map<String, String> queryMap) throws Exception {
+    public ResponseEntity<Response> validatePhoneNumberForSignUp(@RequestParam Map<String, String> queryMap) throws Exception {
     	
     		if(!StringUtils.isValidRequest(queryMap, Constants.PHONE_NUMBER))
     		throw new ValidationException(messages.get("paramertes.not.provided"));
-    		userService.validatePhoneNumber(queryMap.get(Constants.PHONE_NUMBER));
-			return responseGenerator.createResponse(null, "Phone nmber is not registered",Constants.ERROR_CODE_001,HttpStatus.OK);
+    		return userService.validatePhoneNumberForSignUp(queryMap.get(Constants.PHONE_NUMBER));
      }
     
     
@@ -104,7 +102,7 @@ public class UsersResource<T> {
     		return responseGenerator.createErrorResponse(messages.get("validation.error"), Constants.ERROR_CODE_1000, HttpStatus.BAD_REQUEST, bindingResult.getAllErrors());	
     		}
 			userService.insertWahterUser(wahterUsers);
-			return responseGenerator.createResponse(null, messages.get("registration.succesful"), Constants.ERROR_CODE_001, HttpStatus.OK);
+			return responseGenerator.createResponse(null, messages.get("registration.succesful"), Constants.RESPONSE_CODE_001, HttpStatus.OK);
     }
     
     @RequestMapping(value = "/createpotentialuser", method = RequestMethod.POST)
@@ -114,7 +112,7 @@ public class UsersResource<T> {
     		return responseGenerator.createErrorResponse(messages.get("validation.error"), Constants.ERROR_CODE_1000, HttpStatus.BAD_REQUEST, bindingResult.getAllErrors());	
     		}
 			userService.insertPotentialUser(potentialUsers);
-			return responseGenerator.createResponse(null, messages.get("registration.succesful"), Constants.ERROR_CODE_001, HttpStatus.OK);
+			return responseGenerator.createResponse(null, messages.get("registration.succesful"), Constants.RESPONSE_CODE_001, HttpStatus.OK);
     }
     
     
@@ -123,7 +121,7 @@ public class UsersResource<T> {
     public ResponseEntity<Response> updateUser(@RequestBody Users users) throws Exception {
     	
     		if(userService.updateUser(users))
-    		return responseGenerator.createResponse(null, messages.get("update.succesful"), Constants.ERROR_CODE_001, HttpStatus.OK);
+    		return responseGenerator.createResponse(null, messages.get("update.succesful"), Constants.RESPONSE_CODE_001, HttpStatus.OK);
     		else
     		throw new UnknownException("Unknown Exception Occured");
     }

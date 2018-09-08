@@ -19,6 +19,7 @@ import com.water.user.springboot.config.Messages;
 import com.water.user.springboot.constants.Constants;
 import com.water.user.springboot.converters.CustomConverters;
 import com.water.user.springboot.document.PotentialUsers;
+import com.water.user.springboot.document.UserMobileNumbers;
 import com.water.user.springboot.document.Users;
 import com.water.user.springboot.document.WahterUsers;
 import com.water.user.springboot.exceptions.LoginException;
@@ -124,35 +125,41 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 	}
 
 	@Override
-	public boolean validatePhoneNumber(String phoneNumber) throws Exception {
+	public boolean validatePhoneNumberForSignUp(String phoneNumber) throws Exception {
 
 		DBObject query = new QueryBuilder().start()
 				.and(new QueryBuilder().start().put(Constants.PHONE_NUMBER).is(phoneNumber).get()).get();
 
 		DBObject wahterUserObject = findOneObject(Constants.COLLECTION_WAHTER_USERS, query);
-		DBObject potentialUserObject = findOneObject(Constants.COLLECTION_POTENTIAL_USERS, query);
 		Users waterUser = (Users) convertRead(Users.class, wahterUserObject);
 
 		if (wahterUserObject != null) {
 			
 				if (waterUser.getActive()) {
-					throw new LoginException("Phone number is already registered...");
+					throw new LoginException("Phone number is already registered... Please login");
 				} else {
-					throw new LoginException("Our team will contact you shortly");
+					throw new LoginException("Your registraion is under review. Our team will notity you shortly");
 				}
 			
 		}
+		DBObject potentialUserObject = findOneObject(Constants.COLLECTION_POTENTIAL_USERS, query);
 		PotentialUsers potentialUser = (PotentialUsers) convertRead(PotentialUsers.class, potentialUserObject);
 
 		if (potentialUserObject != null) {
 			if (potentialUser.getIsRekkiCleared()) {
-				throw new LoginException("Sign up");
+				return true;
 			} else {
-				throw new LoginException("Team will contact you shortly");
+				throw new LoginException("Your registraion is being processed. Our team will notity you shortly");
 			}
 		}
-
-		return true;
+		
+		DBObject interestedUserObject = findOneObject(Constants.COLLECTION_USER_MOBILE_NUMBERS, query);
+		UserMobileNumbers interestedUser = (UserMobileNumbers) convertRead(UserMobileNumbers.class, interestedUserObject);
+		if (interestedUser != null) {
+				throw new LoginException("Your contact number is recorded. Our team will reach you shortly");
+			} else {
+				return false;
+		}
 	}
 
 	@Override

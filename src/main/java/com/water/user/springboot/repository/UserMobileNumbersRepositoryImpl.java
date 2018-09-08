@@ -43,7 +43,7 @@ public class UserMobileNumbersRepositoryImpl extends BaseRepository implements U
 	@Override
 	public void insertUserMobileNumbers(UserMobileNumbers userMobileNumbers) throws Exception {
 
-		if (usersRepositoryImpl.validatePhoneNumber(userMobileNumbers.getPhoneNumber())) {
+		//if (usersRepositoryImpl.validatePhoneNumberForSignUp(userMobileNumbers.getPhoneNumber())) {
 			DBObject query = new QueryBuilder().start().and(
 					new QueryBuilder().start().put(Constants.PHONE_NUMBER).is(userMobileNumbers.getPhoneNumber()).get())
 					.get();
@@ -56,9 +56,9 @@ public class UserMobileNumbersRepositoryImpl extends BaseRepository implements U
 				convertWrite(userMobileNumbers, document);
 				insertObject(document, Constants.COLLECTION_USER_MOBILE_NUMBERS);
 			} else {
-				throw new LoginException("We will contact you shortly");
+				throw new LoginException("Your contact number is recorded. Our team will reach you shortly");
 			}
-		}
+		//}
 		/*
 		 * DBObject query = new
 		 * QueryBuilder().start().put(Constants.PHONE_NUMBER).is(users.getPhoneNumber())

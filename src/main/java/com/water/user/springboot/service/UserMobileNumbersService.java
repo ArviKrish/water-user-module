@@ -26,7 +26,6 @@ public class UserMobileNumbersService {
 		SimpleDateFormat ft = new SimpleDateFormat(Constants.DATE_FORMAT);
 		userMobileNumbers.setCreateDateTime(ft.format(dNow));
 		userMobileNumbers.setLastUpdatedDateTime(ft.format(dNow));
-		userMobileNumbers.setNumberVerified(false);
 		userMobileNumbersRepository.insertUserMobileNumbers(userMobileNumbers);
 	}
 

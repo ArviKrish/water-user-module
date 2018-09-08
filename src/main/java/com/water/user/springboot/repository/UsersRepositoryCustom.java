@@ -17,7 +17,7 @@ public interface UsersRepositoryCustom {
 
 	public boolean updateUser(Users users) throws Exception;
 
-	boolean validatePhoneNumber(String phoneNumber) throws Exception;
+	boolean validatePhoneNumberForSignUp(String phoneNumber) throws Exception;
 	
 	
 }
