@@ -107,7 +107,7 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 			if (user.getActive()) {
 				return true;
 			} else {
-				throw new LoginException("We will contact you shortly");
+				throw new LoginException("We will contact you shortly", Constants.ERROR_CODE_1102);
 			}
 		}
 		DBObject potentialUserObject = findOneObject(Constants.COLLECTION_POTENTIAL_USERS, query);
@@ -115,13 +115,13 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 
 		if (potentialUserObject != null) {
 			if (potentialUser.getIsRekkiCleared()) {
-				throw new LoginException("Please Sign up");
+				throw new LoginException("Please Sign up", Constants.ERROR_CODE_1105);
 			} else {
-				throw new LoginException("Your registration is being processed...");
+				throw new LoginException("Your registration is being processed...", Constants.ERROR_CODE_1103);
 			}
 		}
 
-		throw new LoginException(messages.get("login.fail.incorrect.credentials"));
+		throw new LoginException(messages.get("login.fail.incorrect.credentials"), Constants.ERROR_CODE_1106);
 	}
 
 	@Override
@@ -136,9 +136,9 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 		if (wahterUserObject != null) {
 			
 				if (waterUser.getActive()) {
-					throw new LoginException("Phone number is already registered... Please login");
+					throw new LoginException("Phone number is already registered... Please login", Constants.ERROR_CODE_1101);
 				} else {
-					throw new LoginException("Your registraion is under review. Our team will notity you shortly");
+					throw new LoginException("Your registraion is under review. Our team will notity you shortly", Constants.ERROR_CODE_1102);
 				}
 			
 		}
@@ -149,14 +149,14 @@ public class UsersRepositoryImpl extends BaseRepository implements UsersReposito
 			if (potentialUser.getIsRekkiCleared()) {
 				return true;
 			} else {
-				throw new LoginException("Your registraion is being processed. Our team will notity you shortly");
+				throw new LoginException("Your registraion is being processed. Our team will notity you shortly", Constants.ERROR_CODE_1103);
 			}
 		}
 		
 		DBObject interestedUserObject = findOneObject(Constants.COLLECTION_USER_MOBILE_NUMBERS, query);
 		UserMobileNumbers interestedUser = (UserMobileNumbers) convertRead(UserMobileNumbers.class, interestedUserObject);
 		if (interestedUser != null) {
-				throw new LoginException("Your contact number is recorded. Our team will reach you shortly");
+				throw new LoginException("Your contact number is recorded. Our team will reach you shortly", Constants.ERROR_CODE_1104);
 			} else {
 				return false;
 		}

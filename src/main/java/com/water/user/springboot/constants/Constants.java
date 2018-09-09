@@ -16,8 +16,17 @@ public class Constants {
 	public static final String ERROR_CODE_1001 = "1001";
 	public static final String ERROR_CODE_1002 = "1002";
 	public static final String ERROR_CODE_1003 = "1003";
+	public static final String ERROR_CODE_1004 = "1004";
 	public static final String RESPONSE_CODE_001 = "001";
 	public static final String RESPONSE_CODE_002 = "002";
+	public static final String ERROR_CODE_1100 = "1100";
+	public static final String ERROR_CODE_1101 = "1101";
+	public static final String ERROR_CODE_1102 = "1102";
+	public static final String ERROR_CODE_1103 = "1103";
+	public static final String ERROR_CODE_1104 = "1104";
+	public static final String ERROR_CODE_1105 = "1105";
+	public static final String ERROR_CODE_1106 = "1106";
+	public static final String ERROR_CODE_1107 = "1107";
 
 
 }

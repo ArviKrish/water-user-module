@@ -2,6 +2,7 @@ package com.water.user.springboot.exceptions;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -71,8 +72,8 @@ public class GlobalExceptionHandler {
 	
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(LoginException.class)
-	public ResponseEntity<Response> handleLoginException(HttpServletRequest request, Exception ex){
-		return responseGenerator.createErrorResponse(ex.getMessage(), Constants.ERROR_CODE_1003, HttpStatus.BAD_REQUEST, null);
+	public ResponseEntity<Response> handleLoginException(LoginException ex){
+		return responseGenerator.createErrorResponse(ex.getMessage().split(Pattern.quote("|"))[1], ex.getMessage().split(Pattern.quote("|"))[0], HttpStatus.BAD_REQUEST, null);
 	}
 	
 	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)

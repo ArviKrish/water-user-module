@@ -56,7 +56,7 @@ public class UserMobileNumbersRepositoryImpl extends BaseRepository implements U
 				convertWrite(userMobileNumbers, document);
 				insertObject(document, Constants.COLLECTION_USER_MOBILE_NUMBERS);
 			} else {
-				throw new LoginException("Your contact number is recorded. Our team will reach you shortly");
+				throw new LoginException("Your contact number is recorded. Our team will reach you shortly", Constants.ERROR_CODE_1107);
 			}
 		//}
 		/*

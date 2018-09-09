@@ -29,6 +29,8 @@ public class ResponseGenerator {
 	
 	public ResponseEntity<Response> createErrorResponse(String message, String code, HttpStatus httpStatus, List<ObjectError> validationErrors){
 		
+		
+		
     	List<ErrorMessage> errorMessages = new ArrayList<ErrorMessage>();
     	
     	Consumer<ObjectError> errorResponseCreator = objectError -> {
@@ -43,7 +45,7 @@ public class ResponseGenerator {
     		validationErrors.forEach(errorResponseCreator);
     	} else {
     		ErrorMessage errorMessage = new ErrorMessage();
-    		errorMessage.setErrorCode(Constants.ERROR_CODE_1000);
+    		errorMessage.setErrorCode(code);
     		errorMessage.setErrorMessage(message);
     		errorMessages.add(errorMessage);
     	}
