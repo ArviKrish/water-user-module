@@ -11,8 +11,5 @@ public interface PotentialUsersRepositoryCustom {
 	public boolean isPhoneNumberRegistered(String phoneNumber, String collectionName) throws Exception;
 	
 	public PotentialUsers getPotentialUserByPhoneNumber(String phoneNumber, String password) throws Exception;
-
-	public UserMobileNumbers getInterestedUserByPhoneNumber(String phoneNumber) throws Exception;
-	
 	
 }

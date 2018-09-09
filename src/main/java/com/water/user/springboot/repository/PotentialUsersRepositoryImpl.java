@@ -52,15 +52,4 @@ public class PotentialUsersRepositoryImpl extends BaseRepository implements Pote
 		return null;
 	}
 	
-	@Override
-	public UserMobileNumbers getInterestedUserByPhoneNumber(String phoneNumber) throws Exception {
-
-		DBObject query = QueryBuilder.start()
-				.and(QueryBuilder.start().put(Constants.PHONE_NUMBER).is(phoneNumber).get()).get();
-		DBObject interestedUserObject = findOneObject(Constants.COLLECTION_USER_MOBILE_NUMBERS, query);
-		if (interestedUserObject != null) {
-			return (UserMobileNumbers) convertRead(UserMobileNumbers.class, interestedUserObject);
-			} 
-		return null;
-	}
 }
