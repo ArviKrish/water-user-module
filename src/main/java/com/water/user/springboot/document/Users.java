@@ -11,7 +11,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.water.user.springboot.validator.Phone;
 
-@Document(collection = "users")
 public class Users extends DTO {
 
 	@Id

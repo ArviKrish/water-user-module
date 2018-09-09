@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(LoginException.class)
 	public ResponseEntity<Response> handleLoginException(LoginException ex){
-		return responseGenerator.createErrorResponse(ex.getMessage().split(Pattern.quote("|"))[1], ex.getMessage().split(Pattern.quote("|"))[0], HttpStatus.BAD_REQUEST, null);
+		return responseGenerator.createErrorResponse(ex.getMessage().split(Pattern.quote(Constants.PIPE_DELIMITER))[1], ex.getMessage().split(Pattern.quote(Constants.PIPE_DELIMITER))[0], HttpStatus.BAD_REQUEST, null);
 	}
 	
 	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)

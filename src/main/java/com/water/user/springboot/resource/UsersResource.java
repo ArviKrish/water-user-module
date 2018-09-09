@@ -70,14 +70,14 @@ public class UsersResource<T> {
     }
     
     
-    @RequestMapping(value = "/getUser", method = RequestMethod.GET)
+    @RequestMapping(value = "/getwahteruser", method = RequestMethod.GET)
     @ResponseBody
     @Validated
-    public ResponseEntity<Response> getUser(@RequestParam Map<String, String> queryMap) throws Exception {
+    public ResponseEntity<Response> getWahterUser(@RequestParam Map<String, String> queryMap) throws Exception {
     	
     		if(!StringUtils.isValidRequest(queryMap, Constants.PHONE_NUMBER))
     		throw new ValidationException(messages.get("paramertes.not.provided"));
-			Users user = userService.getUser(queryMap.get(Constants.PHONE_NUMBER));
+			Users user = userService.getWahterUser(queryMap.get(Constants.PHONE_NUMBER));
 			if(user == null)
 			throw new ValidationException(messages.get("user.not.found"));
 			return responseGenerator.createResponse(user, null,Constants.RESPONSE_CODE_001,HttpStatus.OK);
@@ -117,10 +117,10 @@ public class UsersResource<T> {
     
     
     
-    @RequestMapping(value = "/updateuser", method = RequestMethod.PATCH)
-    public ResponseEntity<Response> updateUser(@RequestBody Users users) throws Exception {
+    @RequestMapping(value = "/updatewahteruser", method = RequestMethod.PATCH)
+    public ResponseEntity<Response> updateUser(@RequestBody WahterUsers wahterUser) throws Exception {
     	
-    		if(userService.updateUser(users))
+    		if(userService.updateWahterUser(wahterUser))
     		return responseGenerator.createResponse(null, messages.get("update.succesful"), Constants.RESPONSE_CODE_001, HttpStatus.OK);
     		else
     		throw new UnknownException("Unknown Exception Occured");

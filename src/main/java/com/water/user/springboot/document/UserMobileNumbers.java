@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.water.user.springboot.validator.Phone;
 
-@Document(collection = "user_mobile_numbers")
+@Document(collection = "User_mobile_numbers")
 public class UserMobileNumbers {
 
 	@Id

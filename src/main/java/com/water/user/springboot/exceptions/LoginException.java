@@ -21,11 +21,11 @@ import org.springframework.http.HttpStatus;
 		}
 
 		public LoginException(String exception) {
-		    super(Constants.ERROR_CODE_1100+"|"+exception);
+		    super(Constants.ERROR_CODE_1100+Constants.PIPE_DELIMITER+exception);
 		}
 		  
 		public LoginException(String exception, String errorCode) {
-			super(errorCode+"|"+exception);
+			super(errorCode+Constants.PIPE_DELIMITER+exception);
 		}
 
 

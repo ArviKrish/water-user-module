@@ -4,9 +4,12 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import com.water.user.springboot.document.Users;
+import com.water.user.springboot.document.WahterUsers;
 
 @Repository
-public interface UsersRepository extends MongoRepository<Users, String>, UsersRepositoryCustom {
+public interface WahterUsersRepository extends MongoRepository<WahterUsers, String>, WahterUsersRepositoryCustom {
 	
-	public Users findByPhoneNumber(String phoneNumber);
+	public WahterUsers findByPhoneNumber(String phoneNumber);
+
+	
 }
